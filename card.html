@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading… — Student Support Persona Cards</title>
+  <meta name="description" id="meta-description" content="Student Support Persona Cards — a teacher resource grounded in UDL and IDEA frameworks.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Base reset & tokens ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f6f3f3;
+      --color-accent: #fffbed;
+      --color-text: #1a1a1a;
+      --color-muted: #4a4a4a;
+      --color-border: #c0b8b8;
+      --color-focus: #0057b8;
+      --color-tab-elementary: #1a5276;
+      --color-tab-middle: #145a32;
+      --color-tab-high: #6e2f0c;
+      --color-tab-selected-bg: #1a5276;
+      --color-iep-bg: #fff8e1;
+      --color-iep-border: #f9a825;
+      --color-family-bg: #e8f5e9;
+      --color-family-border: #2e7d32;
+      --radius: 6px;
+      --font-body: 'Atkinson Hyperlegible', sans-serif;
+    }
+
+    html { font-size: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 0.5rem;
+      background: var(--color-text);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 0 0 var(--radius) var(--radius);
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Focus style ── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    /* ── Header ── */
+    header[role="banner"] {
+      background: var(--color-text);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+    }
+    .site-name {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .site-name:hover { text-decoration: underline; }
+    .site-name:focus-visible { outline-color: #fff; }
+
+    /* ── Main ── */
+    main { flex: 1; padding: 1.5rem 1.5rem 3rem; max-width: 900px; width: 100%; margin: 0 auto; }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb { margin-bottom: 1.25rem; font-size: 0.9rem; }
+    .breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; align-items: center; }
+    .breadcrumb li { display: flex; align-items: center; gap: 0.5rem; color: var(--color-muted); }
+    .breadcrumb li + li::before { content: "›"; aria-hidden: true; color: var(--color-muted); }
+    .breadcrumb a { color: var(--color-focus); text-decoration: underline; }
+    .breadcrumb [aria-current="page"] { color: var(--color-text); font-weight: 700; }
+
+    /* ── Print button ── */
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.45rem 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      color: var(--color-text);
+    }
+    .print-btn:hover { background: var(--color-surface); }
+    .print-btn svg { width: 1.1em; height: 1.1em; flex-shrink: 0; }
+
+    /* ── Loading / error state ── */
+    #card-content .loading { padding: 2rem 0; color: var(--color-muted); }
+    .error-message { padding: 2rem 0; }
+    .error-message h1 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+
+    /* ── Card detail article ── */
+    .card-detail__header {
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+    .card-detail__category {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--color-text);
+      color: #fff;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+    .card-detail h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      line-height: 1.15;
+      margin-bottom: 0.6rem;
+    }
+    .card-detail__overview {
+      font-size: 1.05rem;
+      color: var(--color-muted);
+      max-width: 68ch;
+    }
+
+    /* ── Tabs ── */
+    .tabs-container { margin-top: 0; }
+
+    .tab-list {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 3px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.65rem 1.1rem;
+      border: 2px solid transparent;
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      cursor: pointer;
+      background: var(--color-surface);
+      color: var(--color-text);
+      position: relative;
+      bottom: -3px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab:hover:not([aria-selected="true"]) { background: #e0dada; }
+
+    .tab[aria-selected="true"].tab--elementary { background: var(--color-tab-elementary); color: #fff; border-color: var(--color-tab-elementary); }
+    .tab[aria-selected="true"].tab--middle     { background: var(--color-tab-middle);     color: #fff; border-color: var(--color-tab-middle); }
+    .tab[aria-selected="true"].tab--high       { background: var(--color-tab-high);       color: #fff; border-color: var(--color-tab-high); }
+
+    .tab--elementary { border-top: 4px solid var(--color-tab-elementary); }
+    .tab--middle     { border-top: 4px solid var(--color-tab-middle); }
+    .tab--high       { border-top: 4px solid var(--color-tab-high); }
+
+    /* ── Tab panels ── */
+    .tab-panel { padding: 1.5rem 0; }
+    .tab-panel[hidden] { display: none; }
+
+    /* ── Grade panel internals ── */
+    .student-profile {
+      background: var(--color-accent);
+      border-left: 4px solid var(--color-text);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .grade-section { margin-bottom: 1.5rem; }
+
+    .grade-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .grade-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .grade-section ul[role="list"] li {
+      padding: 0.2rem 0 0.2rem 1.4rem;
+      position: relative;
+    }
+    .grade-section ul[role="list"] li::before {
+      content: "•";
+      position: absolute;
+      left: 0.4rem;
+      color: var(--color-muted);
+    }
+
+    /* Strengths marker */
+    .strengths-list li::before { content: "✦" !important; color: var(--color-tab-elementary) !important; }
+
+    /* Pills */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .pill {
+      display: inline-block;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* IEP box */
+    .iep-box {
+      background: var(--color-iep-bg);
+      border: 2px solid var(--color-iep-border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+    }
+    .iep-box ul[role="list"] li::before { color: #b7860b !important; }
+
+    /* Family tip callout */
+    .family-callout {
+      background: var(--color-family-bg);
+      border: 2px solid var(--color-family-border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+    }
+    .family-callout .callout-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-family-border);
+      margin-bottom: 0.4rem;
+    }
+    .family-callout p { font-size: 0.975rem; }
+
+    /* ── Print-all-grades (screen: hidden; print: shown) ── */
+    .print-all-grades { display: none; }
+
+    /* ── Visually hidden ── */
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0;
+      margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* ── Sources bar ── */
+    .card-sources {
+      margin-top: 2rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--color-muted);
+    }
+    .sources-label {
+      font-weight: 700;
+      color: var(--color-text);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .sources-list {
+      list-style: disc;
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+    .sources-item { margin-bottom: 0.1rem; }
+    .card-sources a {
+      color: var(--color-focus);
+      text-decoration: underline;
+    }
+    .card-sources a:hover { text-decoration: none; }
+    /* URL portion hidden on screen — only shown on print */
+    .sources-url-text { display: none; }
+
+    /* Canonical URL shown only on print, below card title */
+    .card-print-url { display: none; }
+
+    /* ── Footer ── */
+    footer[role="contentinfo"] {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: 1rem 1.5rem;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      text-align: center;
+    }
+
+    /* ── Footer download link ── */
+    .footer-download {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .footer-download a {
+      color: var(--color-focus);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+    .footer-download a:hover { text-decoration: none; }
+
+    /* ── Footer sources ── */
+    .footer-sources {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      line-height: 1.8;
+    }
+    .footer-sources a {
+      color: var(--color-focus);
+      text-decoration: underline;
+    }
+    .footer-sources a:hover { text-decoration: none; }
+    .footer-sources span[aria-hidden] {
+      margin: 0 0.35rem;
+      color: var(--color-border);
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      .skip-link,
+      .no-print,
+      .tabs-container { display: none !important; }
+
+      .print-all-grades { display: block !important; }
+
+      header[role="banner"] { background: #fff; color: #000; border-bottom: 2px solid #000; }
+      .site-name { color: #000; }
+
+      main { padding: 0; max-width: 100%; }
+
+      .card-detail__category { background: #000; color: #fff; }
+
+      .print-grade-section { margin-bottom: 2rem; page-break-inside: avoid; }
+      .print-grade-section h2.print-grade-heading {
+        font-size: 1.25rem;
+        border-bottom: 2px solid #000;
+        padding-bottom: 0.25rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .student-profile { border-left-color: #000; }
+
+      .iep-box { border-color: #000; background: #f9f9f9; }
+      .family-callout { border-color: #000; background: #f9f9f9; }
+
+      .pill { border: 1px solid #000; background: #f0f0f0; }
+
+      footer[role="contentinfo"] { border-top: 1px solid #000; }
+
+      .card-sources {
+        background: none;
+        border-top: 1pt solid #000;
+        padding: 0.5rem 0;
+        font-size: 9pt;
+      }
+
+      /* Show URL text on print */
+      .sources-url-text {
+        display: inline;
+        color: #000;
+        word-break: break-all;
+      }
+
+      .card-sources a {
+        color: #000;
+        text-decoration: none;
+      }
+
+      /* Show canonical URL below title on print */
+      .card-print-url {
+        display: block;
+        font-size: 8pt;
+        color: #555;
+        margin-top: 0.15rem;
+        margin-bottom: 0.5rem;
+        word-break: break-all;
+      }
+
+      /* Hide footer download/sources on print */
+      .footer-download,
+      .footer-sources { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header role="banner">
+    <div class="header-inner">
+      <a class="site-name" href="index.html">Student Support Persona Cards</a>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol id="breadcrumb-list">
+        <li><a href="index.html">All Cards</a></li>
+        <li><span aria-current="page">Loading…</span></li>
+      </ol>
+    </nav>
+
+    <button class="print-btn no-print" onclick="window.print()" type="button">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print this card
+    </button>
+
+    <div id="card-content">
+      <p class="loading" role="status" aria-live="polite">Loading card…</p>
+    </div>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <p>Student Support Persona Cards &mdash; A teacher resource grounded in UDL and IDEA frameworks.</p>
+      <p class="footer-download">
+        <a href="docs/student-support-persona-cards.pdf">Download the entire set (.pdf)</a>
+      </p>
+      <p class="footer-sources">
+        Resources:
+        <a href="https://udlguidelines.cast.org/" target="_blank" rel="noopener noreferrer">CAST UDL Guidelines<span class="visually-hidden"> (opens in new tab)</span></a>
+        <span aria-hidden="true">|</span>
+        <a href="https://sites.ed.gov/idea/" target="_blank" rel="noopener noreferrer">IDEA — U.S. Dept. of Education<span class="visually-hidden"> (opens in new tab)</span></a>
+        <span aria-hidden="true">|</span>
+        <a href="https://www.understood.org/" target="_blank" rel="noopener noreferrer">Understood.org<span class="visually-hidden"> (opens in new tab)</span></a>
+        <span aria-hidden="true">|</span>
+        <a href="https://www.wrightslaw.com/" target="_blank" rel="noopener noreferrer">Wrightslaw Special Education Law<span class="visually-hidden"> (opens in new tab)</span></a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── Helpers ── */
+
+      function escapeHTML(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function slugify(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+      }
+
+      function buildList(items, extraClass) {
+        if (!items || items.length === 0) return '';
+        const cls = extraClass ? ' ' + extraClass : '';
+        const lis = items.map(function (item) {
+          return '<li>' + escapeHTML(item) + '</li>';
+        }).join('');
+        return '<ul role="list"' + (extraClass ? ' class="' + escapeHTML(extraClass) + '"' : '') + '>' + lis + '</ul>';
+      }
+
+      function buildSources(sources) {
+        if (!sources || sources.length === 0) return '';
+        var items = sources.map(function(s) {
+          return '<li class="sources-item">'
+            + '<a href="' + escapeHTML(s.url) + '" target="_blank" rel="noopener noreferrer">'
+            + '<span class="sources-label-text">' + escapeHTML(s.label) + '</span>'
+            + '<span class="sources-url-text" aria-hidden="true"> (' + escapeHTML(s.url) + ')</span>'
+            + '<span class="visually-hidden"> (opens in new tab)</span>'
+            + '</a>'
+            + '</li>';
+        }).join('');
+        return '<div class="card-sources" aria-label="Reference sources">'
+          + '<span class="sources-label">Resources:</span>'
+          + '<ul role="list" class="sources-list">'
+          + items
+          + '</ul>'
+          + '</div>';
+      }
+
+      function buildPills(items) {
+        if (!items || items.length === 0) return '';
+        const pills = items.map(function (item) {
+          return '<span class="pill">' + escapeHTML(item) + '</span>';
+        }).join('');
+        return '<div class="pill-group">' + pills + '</div>';
+      }
+
+      function buildGradePanel(gradeData) {
+        if (!gradeData) return '<p>No data available for this grade level.</p>';
+
+        var html = '';
+
+        /* Student profile */
+        if (gradeData.studentProfile) {
+          html += '<blockquote class="student-profile">' + escapeHTML(gradeData.studentProfile) + '</blockquote>';
+        }
+
+        /* What You Might Notice */
+        if (gradeData.whatYouObserve && gradeData.whatYouObserve.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>What You Might Notice</h2>';
+          html += buildList(gradeData.whatYouObserve);
+          html += '</div>';
+        }
+
+        /* Student Strengths */
+        if (gradeData.strengths && gradeData.strengths.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>Student Strengths</h2>';
+          html += buildList(gradeData.strengths, 'strengths-list');
+          html += '</div>';
+        }
+
+        /* Recommended Accommodations */
+        if (gradeData.accommodations && gradeData.accommodations.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>Recommended Accommodations</h2>';
+          html += buildList(gradeData.accommodations);
+          html += '</div>';
+        }
+
+        /* Assistive Technology */
+        if (gradeData.assistiveTech && gradeData.assistiveTech.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>Assistive Technology</h2>';
+          html += buildPills(gradeData.assistiveTech);
+          html += '</div>';
+        }
+
+        /* UDL Strategies */
+        if (gradeData.udlStrategies && gradeData.udlStrategies.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>UDL Strategies</h2>';
+          html += buildList(gradeData.udlStrategies);
+          html += '</div>';
+        }
+
+        /* IEP Considerations */
+        if (gradeData.iepConsiderations && gradeData.iepConsiderations.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>IEP Considerations</h2>';
+          html += '<div class="iep-box">' + buildList(gradeData.iepConsiderations) + '</div>';
+          html += '</div>';
+        }
+
+        /* Who to Collaborate With */
+        if (gradeData.collaborators && gradeData.collaborators.length) {
+          html += '<div class="grade-section">';
+          html += '<h2>Who to Collaborate With</h2>';
+          html += buildPills(gradeData.collaborators);
+          html += '</div>';
+        }
+
+        /* Family Partnership Tip */
+        if (gradeData.familyTip) {
+          html += '<div class="grade-section">';
+          html += '<h2>Family Partnership Tip</h2>';
+          html += '<div class="family-callout">';
+          html += '<div class="callout-label" aria-hidden="true">Tip for Families</div>';
+          html += '<p>' + escapeHTML(gradeData.familyTip) + '</p>';
+          html += '</div>';
+          html += '</div>';
+        }
+
+        return html;
+      }
+
+      /* Build a print-only grade block with a visible heading */
+      function buildPrintGradeBlock(label, gradeData) {
+        var html = '<div class="print-grade-section">';
+        html += '<h2 class="print-grade-heading">' + escapeHTML(label) + '</h2>';
+        html += buildGradePanel(gradeData);
+        html += '</div>';
+        return html;
+      }
+
+      /* ── Render the full card ── */
+      function renderCard(card) {
+        var grades = card.grades || {};
+
+        /* Build tab panels HTML */
+        var panelElementary = buildGradePanel(grades.elementary);
+        var panelMiddle     = buildGradePanel(grades.middle);
+        var panelHigh       = buildGradePanel(grades.high);
+
+        /* Build print-all-grades section */
+        var printAll = '<div class="print-all-grades" aria-hidden="true">';
+        printAll += buildPrintGradeBlock('Elementary (K–5)', grades.elementary);
+        printAll += buildPrintGradeBlock('Middle School (6–8)', grades.middle);
+        printAll += buildPrintGradeBlock('High School (9–12)', grades.high);
+        printAll += '</div>';
+
+        var html = '';
+        html += '<article class="card-detail" aria-labelledby="card-heading">';
+
+        /* Canonical slug URL for this card */
+        var cardSlug = slugify(card.title);
+        var canonicalUrl = 'https://fyvr.net/student-personas/' + cardSlug;
+
+        /* Card header */
+        html += '<header class="card-detail__header">';
+        html += '<span class="card-detail__category">' + escapeHTML(card.category) + '</span>';
+        html += '<h1 id="card-heading">' + escapeHTML(card.title) + '</h1>';
+        html += '<p class="card-detail__overview">' + escapeHTML(card.overview) + '</p>';
+        html += '<p class="card-print-url" aria-hidden="true">' + escapeHTML(canonicalUrl) + '</p>';
+        html += '</header>';
+
+        /* Tabs container */
+        html += '<div class="tabs-container">';
+
+        /* Tab list */
+        html += '<div class="tab-list" role="tablist" aria-label="Grade level">';
+        html += '<button role="tab" id="tab-elementary" aria-selected="true"  aria-controls="panel-elementary" class="tab tab--elementary" tabindex="0">Elementary (K–5)</button>';
+        html += '<button role="tab" id="tab-middle"     aria-selected="false" aria-controls="panel-middle"     class="tab tab--middle"     tabindex="-1">Middle School (6–8)</button>';
+        html += '<button role="tab" id="tab-high"       aria-selected="false" aria-controls="panel-high"       class="tab tab--high"       tabindex="-1">High School (9–12)</button>';
+        html += '</div>';
+
+        /* Panels */
+        html += '<div role="tabpanel" id="panel-elementary" aria-labelledby="tab-elementary" class="tab-panel">' + panelElementary + '</div>';
+        html += '<div role="tabpanel" id="panel-middle"     aria-labelledby="tab-middle"     class="tab-panel" hidden>' + panelMiddle + '</div>';
+        html += '<div role="tabpanel" id="panel-high"       aria-labelledby="tab-high"       class="tab-panel" hidden>' + panelHigh + '</div>';
+
+        html += '</div>'; /* /tabs-container */
+
+        /* Sources */
+        if (card.sources && card.sources.length) {
+          html += buildSources(card.sources);
+        }
+
+        /* Print-only all-grades */
+        html += printAll;
+
+        html += '</article>';
+
+        document.getElementById('card-content').innerHTML = html;
+
+        /* Update document title */
+        document.title = escapeHTML(card.title) + ' — Student Support Persona Cards';
+
+        /* Update meta description */
+        var metaDesc = document.getElementById('meta-description');
+        if (metaDesc) {
+          metaDesc.setAttribute('content', card.overview ? card.overview.substring(0, 160) : 'Student Support Persona Cards — a teacher resource.');
+        }
+
+        /* Update breadcrumb */
+        var catSlug  = slugify(card.category);
+        var breadcrumb = document.getElementById('breadcrumb-list');
+        if (breadcrumb) {
+          breadcrumb.innerHTML =
+            '<li><a href="index.html">All Cards</a></li>' +
+            '<li><a href="index.html#cat-' + escapeHTML(catSlug) + '">' + escapeHTML(card.category) + '</a></li>' +
+            '<li><span aria-current="page">' + escapeHTML(card.title) + '</span></li>';
+        }
+
+        /* Attach tab keyboard behaviour */
+        initTabs();
+      }
+
+      /* ── ARIA tabs keyboard interaction ── */
+      function initTabs() {
+        var tabList = document.querySelector('[role="tablist"]');
+        if (!tabList) return;
+        var tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+
+        function activateTab(tab) {
+          /* Deactivate all */
+          tabs.forEach(function (t) {
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+            var panelId = t.getAttribute('aria-controls');
+            var panel = document.getElementById(panelId);
+            if (panel) panel.hidden = true;
+          });
+
+          /* Activate chosen tab */
+          tab.setAttribute('aria-selected', 'true');
+          tab.setAttribute('tabindex', '0');
+          var activePanelId = tab.getAttribute('aria-controls');
+          var activePanel = document.getElementById(activePanelId);
+          if (activePanel) activePanel.hidden = false;
+        }
+
+        tabList.addEventListener('click', function (e) {
+          var target = e.target.closest('[role="tab"]');
+          if (!target) return;
+          activateTab(target);
+          target.focus();
+        });
+
+        tabList.addEventListener('keydown', function (e) {
+          var currentIndex = tabs.indexOf(document.activeElement);
+          if (currentIndex === -1) return;
+
+          var newIndex;
+          if (e.key === 'ArrowRight') {
+            newIndex = (currentIndex + 1) % tabs.length;
+          } else if (e.key === 'ArrowLeft') {
+            newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          } else if (e.key === 'Home') {
+            newIndex = 0;
+          } else if (e.key === 'End') {
+            newIndex = tabs.length - 1;
+          } else {
+            return; /* let other keys fall through */
+          }
+
+          e.preventDefault();
+          activateTab(tabs[newIndex]);
+          tabs[newIndex].focus();
+        });
+      }
+
+      /* ── Show a friendly error ── */
+      function renderError(message) {
+        document.getElementById('card-content').innerHTML =
+          '<div class="error-message">' +
+          '<h1>Card not found</h1>' +
+          '<p>' + escapeHTML(message) + '</p>' +
+          '<p><a href="index.html">Return to all cards</a></p>' +
+          '</div>';
+        document.title = 'Card not found — Student Support Persona Cards';
+
+        /* Reset breadcrumb */
+        var breadcrumb = document.getElementById('breadcrumb-list');
+        if (breadcrumb) {
+          breadcrumb.innerHTML =
+            '<li><a href="index.html">All Cards</a></li>' +
+            '<li><span aria-current="page">Card not found</span></li>';
+        }
+      }
+
+      /* ── Entry point ── */
+      // Support two URL forms:
+      //   1. card.html?id=N          — direct query string (local dev, old links)
+      //   2. /student-personas/slug  — Apache rewrite keeps slug in pathname,
+      //                                ?id=N is passed internally but browser shows slug
+      var params   = new URLSearchParams(window.location.search);
+      var rawId    = params.get('id');
+
+      // Extract slug from the last path segment (e.g. “/student-personas/dyslexia” → “dyslexia”)
+      var pathSlug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+      // Ignore non-slug path segments (card.html itself)
+      if (pathSlug === 'card.html') pathSlug = '';
+
+      fetch('data/cards.json?v=2')
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error('Could not load card data (HTTP ' + response.status + ').');
+          }
+          return response.json();
+        })
+        .then(function (cards) {
+          var card = null;
+
+          // Try ?id=N first
+          if (rawId) {
+            var cardId = parseInt(rawId, 10);
+            if (!isNaN(cardId)) {
+              for (var i = 0; i < cards.length; i++) {
+                if (cards[i].id === cardId) { card = cards[i]; break; }
+              }
+            }
+          }
+
+          // Fall back to slug match against card titles
+          if (!card && pathSlug) {
+            for (var j = 0; j < cards.length; j++) {
+              if (slugify(cards[j].title) === pathSlug) { card = cards[j]; break; }
+            }
+          }
+
+          if (!card) {
+            renderError('No card was found for this URL. Please select a card from the main listing.');
+            return;
+          }
+          renderCard(card);
+        })
+        .catch(function (err) {
+          renderError('There was a problem loading the card data. Please try again or return to the main listing. (' + (err.message || err) + ')');
+        });
+
+    }());
+  </script>
+</body>
+</html>

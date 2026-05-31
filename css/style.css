@@ -1,0 +1,1214 @@
+/* ============================================================
+   Student Support Persona Cards — Main Stylesheet
+   K-12 Teacher-Facing Web App
+   WCAG 2.2 AA Compliant
+   Font: Atkinson Hyperlegible (Google Fonts)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Google Fonts Import
+   ------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* ------------------------------------------------------------
+   2. Reset & Base
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%; /* 16px base for rem calculations */
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 1.125rem;       /* 18px */
+  line-height: 1.65;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default list styles where semantic role is maintained separately */
+ul,
+ol {
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: #1d4e89;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------
+   3. Visually Hidden Utility
+   ------------------------------------------------------------ */
+.visually-hidden,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------
+   4. Skip Link
+   ------------------------------------------------------------ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background-color: #1d4e89;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom-right-radius: 6px;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   5. Focus Styles
+   ------------------------------------------------------------ */
+:focus-visible {
+  outline: 3px solid #1d4e89;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Remove outline for mouse users where :focus-visible is supported */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   6. Site Header
+   ------------------------------------------------------------ */
+.site-header,
+header[role="banner"] {
+  background-color: #1d4e89;
+  color: #ffffff;
+  padding: 1.5rem 0;
+}
+
+.site-header__inner {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.site-header__app-name,
+.site-name {
+  font-size: 1.625rem;  /* ~26px */
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+  line-height: 1.25;
+}
+
+/* site-name as a link (card.html header) */
+a.site-name {
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a.site-name:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+a.site-name:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.site-header__tagline,
+.site-tagline {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Header links (if any) */
+.site-header a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.site-header a:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.site-header a:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------
+   7. Main Layout
+   ------------------------------------------------------------ */
+.site-main,
+main {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Inner wrappers constrain content width inside full-bleed header/footer */
+.header-inner,
+.footer-inner {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ------------------------------------------------------------
+   8. Site Footer
+   ------------------------------------------------------------ */
+.site-footer,
+footer[role="contentinfo"] {
+  background-color: #f1f5f9;
+  border-top: 1px solid #cbd5e1;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.site-footer p,
+.site-footer small {
+  font-size: 0.9rem;
+  color: #4a5568;   /* #4a5568 on #f1f5f9 — contrast ~5.7:1, passes AA */
+  line-height: 1.5;
+}
+
+.site-footer a,
+footer[role="contentinfo"] a {
+  color: #1d4e89;
+}
+
+.footer-download {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.footer-download a {
+  color: #1d4e89;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.footer-download a:hover {
+  text-decoration: none;
+}
+
+.footer-sources {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #4a5568;
+  line-height: 1.8;
+}
+
+.footer-sources a {
+  color: #1d4e89;
+  text-decoration: underline;
+}
+
+.footer-sources a:hover {
+  text-decoration: none;
+}
+
+.footer-sources span[aria-hidden] {
+  margin: 0 0.4rem;
+  color: #cbd5e1;
+}
+
+/* ------------------------------------------------------------
+   9. Page Intro Box
+   ------------------------------------------------------------ */
+.page-intro,
+.intro-section {
+  background-color: #f0f7ff;
+  border-left: 4px solid #1d4e89;
+  border-radius: 0 6px 6px 0;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+.page-intro p + p,
+.intro-section p + p {
+  margin-top: 0.75rem;
+}
+
+/* ------------------------------------------------------------
+   9b. Grade Filter Bar
+   ------------------------------------------------------------ */
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  appearance: none;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  padding: 0.5rem 1.1rem;
+  min-height: 44px;
+  border: 2px solid #1d4e89;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #1d4e89;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  line-height: 1.3;
+}
+
+.filter-btn:hover {
+  background-color: #e8f4f8;
+}
+
+.filter-btn[aria-pressed="true"] {
+  background-color: #1d4e89;
+  color: #ffffff;
+}
+
+.filter-btn:focus-visible {
+  outline: 3px solid #1d4e89;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------
+   10. Category Sections
+   ------------------------------------------------------------ */
+.category-section {
+  margin-bottom: 3rem;
+}
+
+/* Matches both generated class names */
+.category-section__heading,
+.category-heading {
+  font-size: 1.375rem;  /* ~22px */
+  font-weight: 700;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.category-section__heading::before,
+.category-heading::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 1.4em;
+  background-color: #1d4e89;
+  border-radius: 3px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ------------------------------------------------------------
+   11. Cards Grid
+   ------------------------------------------------------------ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1.25rem;
+}
+
+/* ------------------------------------------------------------
+   12. Card Preview (Index Page)
+   ------------------------------------------------------------ */
+
+/* The list item is the positioning parent for the stretched link */
+.cards-grid li {
+  position: relative;
+  display: flex;
+}
+
+.card-preview {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: visible; /* allow outline to show outside border-radius */
+  transition: border-color 0.15s ease;
+}
+
+/* Outline on hover — entire card */
+.card-preview:hover {
+  border-color: #1d4e89;
+}
+
+/* Outline on focus — entire card gets the ring when link is focused */
+.card-preview:has(.view-card-link:focus-visible) {
+  outline: 3px solid #1d4e89;
+  outline-offset: 2px;
+  border-color: #1d4e89;
+}
+
+/* Card header — matches actual HTML class names */
+.card-preview .card-header {
+  padding: 1rem 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.card-preview .card-title {
+  font-size: 1.0625rem;  /* ~17px */
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Grade pills inside cards — match actual HTML classes */
+.card-preview .grade-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.grade-pill.grade-elementary {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border-color: #a5d6a7;
+}
+
+.grade-pill.grade-middle {
+  background-color: #fff8e1;
+  color: #6d4c00;
+  border-color: #ffe082;
+}
+
+.grade-pill.grade-high {
+  background-color: #fce4ec;
+  color: #880e3f;
+  border-color: #f48fb1;
+}
+
+/* Card body */
+.card-preview .card-body {
+  padding: 0 1rem 0.75rem;
+  flex: 1;
+  font-size: 0.9375rem;  /* ~15px */
+  color: #3d4852;
+  line-height: 1.55;
+}
+
+/* Card footer */
+.card-preview .card-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e9eef4;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* View card link — stretched to cover the full card */
+.view-card-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  background-color: #1d4e89;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 4px;
+  min-height: 44px;
+  transition: background-color 0.15s ease;
+  /* Stretch the link to cover the whole card */
+  position: static;
+}
+
+/* Stretch the link touch area across the whole card via pseudo-element */
+.view-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+}
+
+.view-card-link:hover {
+  background-color: #163d6e;
+  text-decoration: none;
+}
+
+/* Suppress the default focus ring on the link itself — the card gets it instead */
+.view-card-link:focus-visible {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   13. Category Badge
+   ------------------------------------------------------------ */
+.category-badge {
+  display: inline-block;
+  padding: 0.2em 0.65em;
+  background-color: #e8f4f8;
+  border: 1px solid #1d4e89;
+  color: #1d4e89;   /* #1d4e89 on #e8f4f8 — contrast ~5.1:1, passes AA */
+  font-size: 0.775rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------
+   14. Grade Band Pills
+   ------------------------------------------------------------ */
+.grade-pill {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  font-size: 0.775rem;
+  font-weight: 700;
+  border-radius: 999px;
+  white-space: nowrap;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+.grade-pill--elementary {
+  background-color: #e8f5e9;
+  color: #1b5e20;  /* dark green — contrast ~9.2:1 on #e8f5e9 */
+  border-color: #a5d6a7;
+}
+
+.grade-pill--middle {
+  background-color: #fff8e1;
+  color: #6d4c00;  /* dark amber — contrast ~6.8:1 on #fff8e1 */
+  border-color: #ffe082;
+}
+
+.grade-pill--high {
+  background-color: #fce4ec;
+  color: #880e3f;  /* dark rose — contrast ~7.1:1 on #fce4ec */
+  border-color: #f48fb1;
+}
+
+/* ------------------------------------------------------------
+   15. Breadcrumb
+   ------------------------------------------------------------ */
+.breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  color: #4a5568;
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  content: '›';
+  margin: 0 0.4em;
+  color: #8896a5;
+  font-size: 1em;
+  aria-hidden: true;
+}
+
+.breadcrumb__item a {
+  color: #1d4e89;
+  text-decoration: underline;
+}
+
+.breadcrumb__item a:hover {
+  text-decoration: none;
+}
+
+.breadcrumb__item[aria-current="page"] {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   16. Grade Tabs
+   ------------------------------------------------------------ */
+.grade-tabs {
+  margin-top: 2rem;
+}
+
+/* Tab list */
+.grade-tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 2px solid #1d4e89;
+}
+
+/* Tab buttons */
+.grade-tabs__tab {
+  appearance: none;
+  background: none;
+  cursor: pointer;
+  padding: 0.65rem 1.25rem;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  border: 1px solid #cbd5e1;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: -2px;
+  min-height: 44px;  /* touch target */
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  /* Inactive state */
+  background-color: #f1f5f9;
+  color: #1a1a1a;  /* #1a1a1a on #f1f5f9 — contrast ~16:1 */
+}
+
+.grade-tabs__tab:hover:not([aria-selected="true"]) {
+  background-color: #e2e8f0;
+}
+
+/* Active tab */
+.grade-tabs__tab[aria-selected="true"] {
+  background-color: #1d4e89;
+  color: #ffffff;  /* #fff on #1d4e89 — contrast ~7.2:1 */
+  border-color: #1d4e89;
+  border-bottom-color: #1d4e89; /* merges with bottom border */
+}
+
+.grade-tabs__tab:focus-visible {
+  outline: 3px solid #1d4e89;
+  outline-offset: 2px;
+  z-index: 1;
+  position: relative;
+}
+
+.grade-tabs__tab[aria-selected="true"]:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Tab panels */
+.grade-tabs__panel {
+  padding: 1.75rem 0 0;
+}
+
+.grade-tabs__panel[hidden] {
+  display: none;
+}
+
+/* Panel heading (visually distinct grade level label) */
+.grade-tabs__panel-heading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1d4e89;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* ------------------------------------------------------------
+   17. Card Detail Page
+   ------------------------------------------------------------ */
+.card-detail {
+  max-width: 52rem;
+}
+
+.card-detail__header {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.card-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-detail__title {
+  font-size: 1.875rem;  /* ~30px */
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.card-detail__overview {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: #2d3748;  /* #2d3748 on #fff — contrast ~10.5:1 */
+}
+
+/* ------------------------------------------------------------
+   18. Info Sections (inside tab panels)
+   ------------------------------------------------------------ */
+.info-section {
+  margin-bottom: 1.75rem;
+}
+
+/* Section label — bold uppercase bar */
+.info-section__label {
+  display: inline-block;
+  background-color: #1d4e89;
+  color: #ffffff;  /* contrast 7.2:1 */
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.3em 0.75em;
+  border-radius: 3px;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Generic content wrapper */
+.info-section__content {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+/* Bulleted list — default (What You'll Observe, Accommodations) */
+.info-section__list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.info-section__list li + li {
+  margin-top: 0.4rem;
+}
+
+/* Strengths list — ✦ custom marker */
+.info-section__list--strengths {
+  list-style: none;
+  padding-left: 0;
+}
+
+.info-section__list--strengths li {
+  padding-left: 1.75rem;
+  position: relative;
+}
+
+.info-section__list--strengths li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #1d4e89;
+  font-size: 0.85em;
+  line-height: 1.75;
+}
+
+.info-section__list--strengths li + li {
+  margin-top: 0.4rem;
+}
+
+/* Assistive Technology — pill tags */
+.info-section__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.info-section__tag {
+  display: inline-block;
+  padding: 0.3em 0.85em;
+  background-color: #e8f4f8;
+  border: 1px solid #1d4e89;
+  color: #1d4e89;  /* contrast ~5.1:1 on #e8f4f8 */
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 999px;
+  line-height: 1.5;
+}
+
+/* UDL Strategies — 3-column grid */
+.info-section__udl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.info-section__udl-item {
+  background-color: #f0f7ff;
+  border: 1px solid #b3d4f5;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+
+/* IEP Considerations — highlighted box */
+.info-section__iep-box {
+  background-color: #fffde7;
+  border-left: 4px solid #f9a825;
+  border-radius: 0 6px 6px 0;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+.info-section__iep-box p + p {
+  margin-top: 0.6rem;
+}
+
+/* Collaborators — inline pill tags */
+.info-section__collaborators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.info-section__collaborator-tag {
+  display: inline-block;
+  padding: 0.25em 0.8em;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #2d3748;  /* contrast ~8.1:1 on #f1f5f9 */
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 999px;
+  line-height: 1.5;
+}
+
+/* Family Partnership — callout box */
+.info-section__family-callout {
+  background-color: #f0f7ff;
+  border: 1px solid #b3d4f5;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+.info-section__family-callout p + p {
+  margin-top: 0.6rem;
+}
+
+/* Callout icon/label row */
+.info-section__family-callout__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1d4e89;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   19. Print Button
+   ------------------------------------------------------------ */
+.print-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.6rem 1.25rem;
+  background-color: #1d4e89;
+  color: #ffffff;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-height: 44px;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+  margin-bottom: 1.5rem;
+}
+
+.print-button:hover {
+  background-color: #163d6e;
+  text-decoration: none;
+}
+
+.print-button:focus-visible {
+  outline: 3px solid #1d4e89;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------
+   20. No-Print Utility Class
+   ------------------------------------------------------------ */
+.no-print {
+  /* Visible on screen — hidden by @media print below */
+}
+
+/* ------------------------------------------------------------
+   21. Responsive — Single Column Below 40rem
+   ------------------------------------------------------------ */
+@media (max-width: 40rem) {
+  body {
+    font-size: 1rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-tabs__list {
+    flex-direction: column;
+    border-bottom: none;
+    gap: 0.25rem;
+  }
+
+  .grade-tabs__tab {
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0;
+  }
+
+  .grade-tabs__tab[aria-selected="true"] {
+    border-radius: 6px;
+  }
+
+  .card-detail__title {
+    font-size: 1.5rem;
+  }
+
+  .info-section__udl-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-header__app-name {
+    font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 56rem) {
+  .info-section__udl-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------
+   22. Print Styles
+   ------------------------------------------------------------ */
+@media print {
+
+  /* --- Page setup --- */
+  @page {
+    size: letter portrait;
+    margin: 1in;
+  }
+
+  /* --- Reset for print --- */
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000000;
+    background: #ffffff;
+  }
+
+  /* --- Hide non-content elements --- */
+  .site-header,
+  .site-footer,
+  nav,
+  .breadcrumb,
+  .grade-tabs__list,
+  .print-button,
+  .no-print,
+  .card-preview__footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  /* --- Show all tab panels for print --- */
+  .grade-tabs__panel[hidden],
+  .grade-tabs__panel {
+    display: block !important;
+    visibility: visible !important;
+    padding-top: 0;
+    hidden: false;
+  }
+
+  /* Override hidden attribute */
+  [hidden].grade-tabs__panel {
+    display: block !important;
+  }
+
+  /* --- Page intro box --- */
+  .page-intro {
+    border: 1px solid #000000;
+    background: none;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* --- Card detail header --- */
+  .card-detail {
+    max-width: none;
+  }
+
+  .card-detail__title {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-detail__meta {
+    margin-bottom: 0.5rem;
+  }
+
+  .card-detail__overview {
+    font-size: 11pt;
+    color: #000000;
+    margin-bottom: 1rem;
+  }
+
+  .card-detail__header {
+    border-bottom: 2pt solid #000000;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* --- Category badge and pills for print --- */
+  .category-badge {
+    border: 1pt solid #000000;
+    background: none;
+    color: #000000;
+    font-size: 8pt;
+    padding: 0.1em 0.4em;
+  }
+
+  .grade-pill {
+    border: 1pt solid #000000;
+    background: none;
+    color: #000000;
+    font-size: 8pt;
+    padding: 0.1em 0.4em;
+  }
+
+  /* --- Grade tabs container (print: no tab UI) --- */
+  .grade-tabs {
+    margin-top: 0.75rem;
+  }
+
+  /* --- Grade level section print headers --- */
+  .grade-tabs__panel-heading {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #000000;
+    border-bottom: 1pt solid #000000;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem;
+    border-color: #000000;
+  }
+
+  /* --- Ruled divider between grade sections --- */
+  .grade-tabs__panel + .grade-tabs__panel {
+    border-top: 2pt solid #000000;
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+    page-break-before: avoid;
+  }
+
+  /* Try to avoid widows/orphans across grade sections */
+  .grade-tabs__panel {
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Page break BETWEEN grade level sections if they don't fit */
+  .grade-tabs__panel:nth-child(2) {
+    page-break-before: auto;
+  }
+
+  /* --- Info sections --- */
+  .info-section {
+    margin-bottom: 0.75rem;
+  }
+
+  .info-section__label {
+    background: none;
+    color: #000000;
+    border: none;
+    padding: 0;
+    font-size: 7.5pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .info-section__content {
+    font-size: 10pt;
+    color: #000000;
+  }
+
+  .info-section__list {
+    list-style: disc;
+    padding-left: 1rem;
+  }
+
+  .info-section__list--strengths li::before {
+    color: #000000;
+  }
+
+  .info-section__tag {
+    background: none;
+    border: 1pt solid #000000;
+    color: #000000;
+    font-size: 8.5pt;
+    border-radius: 3px;
+  }
+
+  .info-section__udl-grid {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .info-section__udl-item {
+    background: none;
+    border: 1pt solid #888888;
+    padding: 0.4rem 0.5rem;
+    font-size: 10pt;
+  }
+
+  .info-section__iep-box {
+    background: none;
+    border-left: 3pt solid #000000;
+    border-radius: 0;
+    padding: 0.4rem 0.75rem;
+    font-size: 10pt;
+  }
+
+  .info-section__collaborator-tag {
+    background: none;
+    border: 1pt solid #000000;
+    color: #000000;
+    font-size: 8.5pt;
+    border-radius: 3px;
+  }
+
+  .info-section__family-callout {
+    background: none;
+    border: 1pt solid #888888;
+    padding: 0.4rem 0.75rem;
+    font-size: 10pt;
+  }
+
+  .info-section__family-callout__label {
+    color: #000000;
+    font-size: 8pt;
+  }
+
+  /* --- Headings in print --- */
+  h1 {
+    font-size: 14pt;
+  }
+
+  h2 {
+    font-size: 12pt;
+  }
+
+  h3 {
+    font-size: 11pt;
+  }
+
+  /* --- Links in print --- */
+  a[href]::after {
+    content: none; /* suppress URL printing */
+  }
+
+  /* --- Main area full-width in print --- */
+  .site-main {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- Card detail max-width reset --- */
+  .card-detail {
+    max-width: none;
+  }
+
+}
+/* End of stylesheet */

@@ -1,0 +1,81 @@
+# Student Support Persona Cards — Slug URL routing
+# Rewrites /student-personas/<slug> → card.html?id=N
+# Deploy this file to the /student-personas/ directory on fyvr.net
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /student-personas/
+
+  # Skip real files and directories (css/, data/, docs/, etc.)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  RewriteRule ^dyslexia$ card.html?id=1 [L,QSA]
+  RewriteRule ^dysgraphia$ card.html?id=2 [L,QSA]
+  RewriteRule ^dyscalculia$ card.html?id=3 [L,QSA]
+  RewriteRule ^reading-comprehension-disorder$ card.html?id=4 [L,QSA]
+  RewriteRule ^nonverbal-learning-disability$ card.html?id=5 [L,QSA]
+  RewriteRule ^adhd-inattentive-type$ card.html?id=6 [L,QSA]
+  RewriteRule ^adhd-hyperactive-impulsive-type$ card.html?id=7 [L,QSA]
+  RewriteRule ^adhd-combined-type$ card.html?id=8 [L,QSA]
+  RewriteRule ^executive-function-challenges$ card.html?id=9 [L,QSA]
+  RewriteRule ^processing-speed-differences$ card.html?id=10 [L,QSA]
+  RewriteRule ^autism-high-support-needs$ card.html?id=11 [L,QSA]
+  RewriteRule ^autism-moderate-support-needs$ card.html?id=12 [L,QSA]
+  RewriteRule ^autism-lower-support-needs-asperger-profile$ card.html?id=13 [L,QSA]
+  RewriteRule ^pda-profile-pathological-demand-avoidance$ card.html?id=14 [L,QSA]
+  RewriteRule ^twice-exceptional-autism$ card.html?id=15 [L,QSA]
+  RewriteRule ^generalized-anxiety$ card.html?id=16 [L,QSA]
+  RewriteRule ^school-refusal-and-avoidance$ card.html?id=17 [L,QSA]
+  RewriteRule ^emotional-dysregulation$ card.html?id=18 [L,QSA]
+  RewriteRule ^trauma-informed-needs$ card.html?id=19 [L,QSA]
+  RewriteRule ^oppositional-defiant-disorder$ card.html?id=20 [L,QSA]
+  RewriteRule ^expressive-language-disorder$ card.html?id=21 [L,QSA]
+  RewriteRule ^receptive-language-disorder$ card.html?id=22 [L,QSA]
+  RewriteRule ^stuttering-and-fluency$ card.html?id=23 [L,QSA]
+  RewriteRule ^selective-mutism$ card.html?id=24 [L,QSA]
+  RewriteRule ^social-communication-disorder$ card.html?id=25 [L,QSA]
+  RewriteRule ^low-vision$ card.html?id=26 [L,QSA]
+  RewriteRule ^deaf-hard-of-hearing$ card.html?id=27 [L,QSA]
+  RewriteRule ^orthopedic-impairment$ card.html?id=28 [L,QSA]
+  RewriteRule ^sensory-processing-disorder$ card.html?id=29 [L,QSA]
+  RewriteRule ^chronic-health-condition$ card.html?id=30 [L,QSA]
+  RewriteRule ^mild-intellectual-disability$ card.html?id=31 [L,QSA]
+  RewriteRule ^moderate-intellectual-disability$ card.html?id=32 [L,QSA]
+  RewriteRule ^down-syndrome$ card.html?id=33 [L,QSA]
+  RewriteRule ^developmental-delay$ card.html?id=34 [L,QSA]
+  RewriteRule ^intellectual-giftedness-with-co-occurring-disability$ card.html?id=35 [L,QSA]
+  RewriteRule ^traumatic-brain-injury$ card.html?id=36 [L,QSA]
+  RewriteRule ^multiple-disabilities$ card.html?id=37 [L,QSA]
+  RewriteRule ^deaf-blindness$ card.html?id=38 [L,QSA]
+  RewriteRule ^english-language-learner-with-disability$ card.html?id=39 [L,QSA]
+  RewriteRule ^twice-exceptional-gifted-with-learning-disability$ card.html?id=40 [L,QSA]
+  RewriteRule ^sickle-cell-disease$ card.html?id=41 [L,QSA]
+  RewriteRule ^cystic-fibrosis$ card.html?id=42 [L,QSA]
+  RewriteRule ^type-1-diabetes$ card.html?id=43 [L,QSA]
+  RewriteRule ^epilepsy-and-seizure-disorders$ card.html?id=44 [L,QSA]
+  RewriteRule ^childhood-cancer-and-treatment$ card.html?id=45 [L,QSA]
+  RewriteRule ^inflammatory-bowel-disease$ card.html?id=46 [L,QSA]
+  RewriteRule ^migraines$ card.html?id=47 [L,QSA]
+  RewriteRule ^severe-allergies-and-anaphylaxis$ card.html?id=48 [L,QSA]
+  RewriteRule ^juvenile-idiopathic-arthritis$ card.html?id=49 [L,QSA]
+  RewriteRule ^ehlers-danlos-syndrome$ card.html?id=50 [L,QSA]
+  RewriteRule ^spina-bifida$ card.html?id=51 [L,QSA]
+  RewriteRule ^osteogenesis-imperfecta$ card.html?id=52 [L,QSA]
+  RewriteRule ^limb-difference$ card.html?id=53 [L,QSA]
+  RewriteRule ^dwarfism$ card.html?id=54 [L,QSA]
+  RewriteRule ^tourette-syndrome$ card.html?id=55 [L,QSA]
+  RewriteRule ^fetal-alcohol-spectrum-disorder$ card.html?id=56 [L,QSA]
+  RewriteRule ^ptsd$ card.html?id=57 [L,QSA]
+  RewriteRule ^albinism$ card.html?id=58 [L,QSA]
+  RewriteRule ^cortical-visual-impairment$ card.html?id=59 [L,QSA]
+  RewriteRule ^unilateral-hearing-loss$ card.html?id=60 [L,QSA]
+
+</IfModule>
+
+# Cache JSON data for 1 hour (was 10 min default)
+<IfModule mod_headers.c>
+  <FilesMatch "\.json$">
+    Header set Cache-Control "max-age=3600, public"
+  </FilesMatch>
+</IfModule>
