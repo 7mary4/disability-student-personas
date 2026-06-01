@@ -484,8 +484,9 @@
       function slugify(str) {
         return String(str)
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
+          .replace(/&/g, 'and')          // & → and  (matches Python slugify)
+          .replace(/[^a-z0-9]+/g, '-')   // everything else non-alphanumeric → -
+          .replace(/^-|-$/g, '');        // trim leading/trailing hyphens
       }
 
       function buildList(items, extraClass) {
@@ -782,7 +783,7 @@
       // Ignore non-slug path segments (card.html itself)
       if (pathSlug === 'card.html') pathSlug = '';
 
-      fetch('data/cards.json?v=2')
+      fetch('data/cards.json?v=3')
         .then(function (response) {
           if (!response.ok) {
             throw new Error('Could not load card data (HTTP ' + response.status + ').');

@@ -137,7 +137,7 @@ def build_pdf():
         from reportlab.platypus import (
             BaseDocTemplate, PageTemplate, Frame,
             Paragraph, Spacer, PageBreak, HRFlowable,
-            ListFlowable, ListItem, NextPageTemplate,
+            ListFlowable, ListItem, NextPageTemplate, Table, TableStyle,
         )
         from reportlab.platypus.tableofcontents import TableOfContents
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -306,36 +306,74 @@ def build_pdf():
     )
     doc.addPageTemplates([page_template])
 
+    # ── Helper: single-cell Table used as a padded background box ────────────
+    CONTENT_W = PAGE_W - 2 * MARGIN  # usable text width
+
+    def boxed(flowable_or_list, bg_color, border_color=None, top_margin=4, bottom_margin=8):
+        """Wrap one or more flowables in a single-cell Table for reliable
+        background colour and padding — ReportLab Paragraph borderPadding
+        is unreliable for background boxes."""
+        content = flowable_or_list if isinstance(flowable_or_list, list) else [flowable_or_list]
+        tbl = Table([[content]], colWidths=[CONTENT_W])
+        style_cmds = [
+            ('BACKGROUND',   (0,0), (-1,-1), bg_color),
+            ('TOPPADDING',   (0,0), (-1,-1), 6),
+            ('BOTTOMPADDING',(0,0), (-1,-1), 6),
+            ('LEFTPADDING',  (0,0), (-1,-1), 10),
+            ('RIGHTPADDING', (0,0), (-1,-1), 10),
+            ('VALIGN',       (0,0), (-1,-1), 'TOP'),
+        ]
+        if border_color:
+            style_cmds += [
+                ('BOX', (0,0), (-1,-1), 0.75, border_color),
+            ]
+        tbl.setStyle(TableStyle(style_cmds))
+        tbl.spaceBefore = top_margin
+        tbl.spaceAfter  = bottom_margin
+        return tbl
+
     # ── Helper: build a grade panel as a list of flowables ───────────────────
     def grade_flowables(grade_data, grade_label, grade_color):
         items = []
-        # Grade heading
-        items.append(Paragraph(grade_label, S(f"Grade_{grade_label}",
-            fontName=BASE_FONT_BOLD, fontSize=11, textColor=colors.white,
-            backColor=grade_color, spaceBefore=12, spaceAfter=6,
-            leading=15, borderPadding=(4, 8, 4, 8))))
 
-        # Student profile
+        # Grade heading — full-width coloured bar
+        items.append(Spacer(1, 10))
+        items.append(Table(
+            [[Paragraph(grade_label, S(f"GH_{grade_label}",
+                fontName=BASE_FONT_BOLD, fontSize=11, textColor=colors.white,
+                leading=15))]],
+            colWidths=[CONTENT_W],
+            style=TableStyle([
+                ('BACKGROUND',    (0,0), (-1,-1), grade_color),
+                ('TOPPADDING',    (0,0), (-1,-1), 6),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                ('LEFTPADDING',   (0,0), (-1,-1), 10),
+                ('RIGHTPADDING',  (0,0), (-1,-1), 10),
+            ])
+        ))
+
+        # Student profile — light grey box
         if grade_data.get("studentProfile"):
-            items.append(Paragraph(
-                f"<i>{grade_data['studentProfile']}</i>",
-                S("Profile", fontName=BASE_FONT, fontSize=9.5,
-                  textColor=DARK, spaceBefore=6, spaceAfter=10, leading=14,
-                  backColor=colors.HexColor("#f8f8f4"),
-                  borderPadding=(8, 10, 8, 10), leftIndent=0)))
+            items.append(boxed(
+                Paragraph(f"<i>{grade_data['studentProfile']}</i>",
+                    S("Profile", fontName=BASE_FONT, fontSize=9.5,
+                      textColor=DARK, leading=14)),
+                bg_color=colors.HexColor("#f4f4f0"),
+                top_margin=6, bottom_margin=10
+            ))
 
-        def bullet_list(heading, items_data, style=style_li, prefix="•"):
+        def bullet_list(heading, items_data):
             if not items_data:
                 return []
             out = [Paragraph(heading, style_section)]
             list_items = [
-                ListItem(Paragraph(item, style), leftIndent=20, bulletColor=BLUE)
+                ListItem(Paragraph(item, style_li), leftIndent=20, bulletColor=BLUE)
                 for item in items_data
             ]
             out.append(ListFlowable(list_items,
                 bulletType="bullet", start="•",
                 leftIndent=12, bulletFontSize=8,
-                spaceAfter=2))
+                spaceAfter=6))
             return out
 
         # What You Might Notice
@@ -347,53 +385,49 @@ def build_pdf():
         # Accommodations
         items += bullet_list("Recommended Accommodations", grade_data.get("accommodations", []))
 
-        # Assistive Tech — inline pills as comma-separated
+        # Assistive Tech — bullet list (not inline pills — too long now)
         at = grade_data.get("assistiveTech", [])
         if at:
-            items.append(Paragraph("Assistive Technology", style_section))
-            items.append(Paragraph(
-                " &nbsp;|&nbsp; ".join(at),
-                S("ATInline", fontName=BASE_FONT, fontSize=9, textColor=BLUE,
-                  spaceAfter=6, leading=13)))
+            items += bullet_list("Assistive Technology", at)
 
         # UDL Strategies
         items += bullet_list("UDL Strategies", grade_data.get("udlStrategies", []))
 
-        # IEP Considerations — highlighted box
+        # IEP Considerations — yellow background box
         iep = grade_data.get("iepConsiderations", [])
         if iep:
             items.append(Paragraph("IEP Considerations", style_section))
-            iep_items = [
-                ListItem(
-                    Paragraph(i, S("IEPLi", fontName=BASE_FONT, fontSize=9.5,
-                                   textColor=DARK, leading=14)),
-                    leftIndent=20, bulletColor=IEP_BORDER
-                )
-                for i in iep
-            ]
-            iep_list = ListFlowable(iep_items, bulletType="bullet", start="▸",
-                leftIndent=12, bulletFontSize=8,
-                backColor=IEP_BG, spaceBefore=4, spaceAfter=8)
-            items.append(iep_list)
+            iep_paras = []
+            for i_text in iep:
+                iep_paras.append(Paragraph(
+                    f"<bullet>▸</bullet>{i_text}",
+                    S("IEPLi", fontName=BASE_FONT, fontSize=9.5,
+                      textColor=DARK, leading=14, leftIndent=14,
+                      bulletIndent=2, spaceAfter=3)
+                ))
+            items.append(boxed(
+                iep_paras,
+                bg_color=IEP_BG,
+                border_color=IEP_BORDER,
+                top_margin=3, bottom_margin=10
+            ))
 
-        # Collaborators — inline
+        # Collaborators — bullet list
         collab = grade_data.get("collaborators", [])
         if collab:
-            items.append(Paragraph("Who to Collaborate With", style_section))
-            items.append(Paragraph(
-                " &nbsp;·&nbsp; ".join(collab),
-                S("CollabInline", fontName=BASE_FONT_BOLD, fontSize=9,
-                  textColor=DARK, spaceAfter=8, leading=13)))
+            items += bullet_list("Who to Collaborate With", collab)
 
-        # Family Partnership Tip
+        # Family Partnership Tip — green background box
         tip = grade_data.get("familyTip", "")
         if tip:
             items.append(Paragraph("Family Partnership Tip", style_section))
-            items.append(Paragraph(
-                tip,
-                S("FamTip", fontName=BASE_FONT, fontSize=9.5,
-                  textColor=DARK, leading=14, spaceBefore=4, spaceAfter=10,
-                  backColor=FAMILY_BG, borderPadding=(8, 10, 8, 10))))
+            items.append(boxed(
+                Paragraph(tip, S("FamTip", fontName=BASE_FONT, fontSize=9.5,
+                    textColor=DARK, leading=14)),
+                bg_color=FAMILY_BG,
+                border_color=colors.HexColor("#2e7d32"),
+                top_margin=3, bottom_margin=12
+            ))
 
         return items
 
